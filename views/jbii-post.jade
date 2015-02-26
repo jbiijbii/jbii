@@ -1,0 +1,31 @@
+﻿doctype html 
+html
+  body
+    |<script>
+    |function listener(event){
+    |      postJbiiData(event.data);
+    |} 
+    |if (window.addEventListener){
+    |      addEventListener("message", listener, false); 
+    |} else {
+    |      attachEvent("onmessage", listener);
+    |}
+    |endpoint = window.location.href;
+    |function postProxy(data){
+    |     var target = parent.postMessage ? parent : (parent.document.postMessage ? parent.document : undefined);
+    |     if (typeof target != "undefined")                   
+    |         target.postMessage(data, "*");                                             
+    |}
+    |function postJbiiData(data) {
+    |     var jbii = new XMLHttpRequest();
+    |     jbii.open("POST", endpoint);
+    |     jbii.setRequestHeader('Content-Type', 'application/json');
+    |     jbii.onreadystatechange = function () {
+    |       if (jbii.readyState == 4 && jbii.status == 200) {
+    |                 postProxy(jbii.responseText); 
+    |       } 
+    |     }
+    |     jbii.send(data);
+    |}
+    |</script>
+    
